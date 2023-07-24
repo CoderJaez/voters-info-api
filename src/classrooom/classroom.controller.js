@@ -1,17 +1,18 @@
 const TryCatch = require("../utils/tryCatch");
+const Classroom = require("./classroom.model");
 const {
   CreateOne,
   UpdateOne,
   FindAll,
   FindOne,
   DeleteOne,
-} = require("./classroom.service");
+} = require("../DataAccess");
 const mongoose = require("mongoose");
 
 module.exports = {
   post: TryCatch(async (req, res) => {
     const data = req.body;
-    const result = await CreateOne(data);
+    const result = await CreateOne(Classroom, data);
 
     if (!result)
       return res.status(500).json({ message: "Error saving classroom" });
@@ -22,11 +23,13 @@ module.exports = {
 
   get: TryCatch(async (req, res) => {
     const id = req.params.id;
-    const filter = req.query ? req.query : {};
-
+    const filter =
+      req.query.roomNo !== undefined
+        ? { roomNo: { $regex: req.query.roomNo, $options: "i" } }
+        : {};
     let result;
-    if (mongoose.isValidObjectId(id)) result = await FindOne(id);
-    else result = await FindAll(filter);
+    if (mongoose.isValidObjectId(id)) result = await FindOne(Classroom, id);
+    else result = await FindAll(Classroom, filter);
 
     if (!result)
       return res.status(500).json({ message: "Something went wrong" });
@@ -35,7 +38,7 @@ module.exports = {
   put: TryCatch(async (req, res) => {
     const id = req.params.id;
     const data = req.body;
-    const result = await UpdateOne(id, data);
+    const result = await UpdateOne(Classroom, id, data);
 
     if (!result)
       return res.status(500).json({ message: "Error update classroom" });
@@ -48,7 +51,7 @@ module.exports = {
   deleteOne: TryCatch(async (req, res) => {
     const id = req.params.id;
 
-    const result = await DeleteOne(id);
+    const result = await DeleteOne(Classroom, id);
     if (!result)
       return res.status(500).json({ message: "Error deleting classroom" });
 
