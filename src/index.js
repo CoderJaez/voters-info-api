@@ -12,10 +12,10 @@ app.use(express.json());
 
 //Routes
 const classroomRouter = require("./classrooom/classroom.route");
-
+const teacherRouter = require("./teacher/teacher.route");
 //Routers
 app.use(`${API_URL}classrooms`, classroomRouter);
-
+app.use(`${API_URL}teachers`, teacherRouter);
 //Middlewares
 app.use(errorHandler);
 

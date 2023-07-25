@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const DataAccess = {
   CreateOne: async (Model, data) => {
     let result = new Model(data);
-    result = await Model.save();
+    result = await result.save();
 
     return result;
   },
