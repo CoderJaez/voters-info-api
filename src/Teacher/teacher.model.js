@@ -20,8 +20,9 @@ const teacherSchema = mongoose.Schema(
       minLength: [11, "Invalid contact number"],
       maxLength: [12, "Invalid contact number"],
     },
-    profilePic: {
-      type: String,
+    image: {
+      filename: { type: String, default: "" },
+      path: { type: String, default: "" },
     },
     email: {
       type: String,
@@ -46,11 +47,21 @@ const teacherSchema = mongoose.Schema(
       required: [true, "The {PATH} is required"],
       minLength: [8, "The {PATH} must at least 8 characters"],
     },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   },
 );
+
+teacherSchema.virtual("fullname").get(function () {
+  return `${
+    this.lastname
+  }, ${this.firstname} ${this.middlename !== undefined ? this.middlename : null}`;
+});
 
 const Teacher = mongoose.model("Teacher", teacherSchema);
 

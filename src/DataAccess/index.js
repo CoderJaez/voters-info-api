@@ -10,7 +10,11 @@ const DataAccess = {
   UpdateOne: async (Model, id, data) => {
     if (!mongoose.isValidObjectId(id)) return null;
 
-    const result = Model.findByIdAndUpdate(id, data);
+    const result = Model.updateOne({ _id: id }, data);
+    return result;
+  },
+  UpdateMany: async (Model, condition, value) => {
+    const result = Model.updateMany(condition, value);
     return result;
   },
   DeleteOne: async (Model, id) => {
@@ -25,6 +29,8 @@ const DataAccess = {
   },
   FindOne: async (Model, id) => {
     const result = await Model.findOne({ _id: id });
+
+    if (!result) return null;
     return result;
   },
 };

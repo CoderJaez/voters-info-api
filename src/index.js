@@ -16,6 +16,8 @@ const teacherRouter = require("./teacher/teacher.route");
 //Routers
 app.use(`${API_URL}classrooms`, classroomRouter);
 app.use(`${API_URL}teachers`, teacherRouter);
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
+
 //Middlewares
 app.use(errorHandler);
 
