@@ -12,7 +12,7 @@ const {
   DeleteOne,
 } = require("../DataAccess");
 
-const Teacher = require("./teacher.model");
+const Teacher = require("./instructor.model");
 const { default: mongoose } = require("mongoose");
 const saltRound = 10;
 const FILE_TYPE_MAP = {

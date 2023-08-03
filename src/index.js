@@ -12,11 +12,11 @@ app.use(express.json());
 
 //Routers
 const classroomRouter = require("./classrooom/classroom.route");
-const teacherRouter = require("./teacher/teacher.route");
+const instructorRouter = require("./instructor/instructor.route");
 const occupancyRouter = require("./occupancy/occupancy.route");
 //Routes
 app.use(`${API_URL}classrooms`, classroomRouter);
-app.use(`${API_URL}teachers`, teacherRouter);
+app.use(`${API_URL}instructors`, instructorRouter);
 app.use(`${API_URL}occupancies`, occupancyRouter);
 
 app.use("/public/uploads", express.static(__dirname + "/public/uploads"));

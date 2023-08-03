@@ -6,7 +6,7 @@ const {
   changePassword,
   uploadImage,
   remove,
-} = require("./teacher.controller");
+} = require("./instructor.controller");
 const router = Router();
 
 router

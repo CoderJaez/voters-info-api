@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { isExist, isValidEmail } = require("../utils/validator");
 
-const teacherSchema = mongoose.Schema(
+const instructorSchema = mongoose.Schema(
   {
     lastname: {
       type: String,
@@ -57,12 +57,12 @@ const teacherSchema = mongoose.Schema(
   },
 );
 
-teacherSchema.virtual("fullname").get(function () {
+instructorSchema.virtual("fullname").get(function () {
   return `${
     this.lastname
   }, ${this.firstname} ${this.middlename !== undefined ? this.middlename : null}`;
 });
 
-const Teacher = mongoose.model("Teacher", teacherSchema);
+const Instructor = mongoose.model("Instructor", instructorSchema);
 
-module.exports = Teacher;
+module.exports = Instructor;

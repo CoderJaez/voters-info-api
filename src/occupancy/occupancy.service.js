@@ -6,10 +6,10 @@ const OccupancyService = {
     const result = await Occupancy.aggregate([
       {
         $lookup: {
-          from: "teachers",
-          localField: "teacher",
+          from: "intructors",
+          localField: "intructor",
           foreignField: "_id",
-          as: "teacher",
+          as: "instructor",
         },
       },
       {
@@ -21,7 +21,7 @@ const OccupancyService = {
         },
       },
       {
-        $unwind: "$teacher",
+        $unwind: "$instructor",
       },
       {
         $unwind: "$classroom",
@@ -29,8 +29,8 @@ const OccupancyService = {
       {
         $project: {
           _id: 1,
-          teacher: {
-            $concat: ["$teacher.firstname", " ", "$teacher.lastname"],
+          instructor: {
+            $concat: ["$instructor.firstname", " ", "$instructor.lastname"],
           },
           classroom: {
             roomNo: "$classroom.roomNo",
