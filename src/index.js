@@ -10,12 +10,15 @@ const app = express();
 app.use(cors("*"));
 app.use(express.json());
 
-//Routes
+//Routers
 const classroomRouter = require("./classrooom/classroom.route");
 const teacherRouter = require("./teacher/teacher.route");
-//Routers
+const occupancyRouter = require("./occupancy/occupancy.route");
+//Routes
 app.use(`${API_URL}classrooms`, classroomRouter);
 app.use(`${API_URL}teachers`, teacherRouter);
+app.use(`${API_URL}occupancies`, occupancyRouter);
+
 app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 
 //Middlewares

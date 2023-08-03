@@ -43,9 +43,7 @@ module.exports = {
     if (!result)
       return res.status(500).json({ message: "Error update classroom" });
 
-    return res
-      .status(200)
-      .json({ data: result, message: "Succesfully updated classroom" });
+    return res.status(200).json({ message: "Succesfully updated classroom" });
   }),
 
   deleteOne: TryCatch(async (req, res) => {

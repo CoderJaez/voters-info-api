@@ -23,7 +23,7 @@ const DataAccess = {
     return result;
   },
   FindAll: async (Model, search) => {
-    const result = await Model.find(search);
+    const result = await Model.find(search).sort({ createdAt: -1 });
 
     return result;
   },
