@@ -12,7 +12,7 @@ const {
   DeleteOne,
 } = require("../DataAccess");
 
-const Teacher = require("./instructor.model");
+const Instructor = require("./instructor.model");
 const { default: mongoose } = require("mongoose");
 const saltRound = 10;
 const FILE_TYPE_MAP = {
@@ -39,43 +39,44 @@ const upload = multer({ storage });
 module.exports = {
   post: TryCatch(async (req, res) => {
     const data = req.body;
-    console.log(data);
     data["password"] =
       data.password !== undefined
         ? await bycrypt.hashSync(data.password, saltRound)
         : "";
-    const result = await CreateOne(Teacher, data);
+    const result = await CreateOne(Instructor, data);
     if (!result)
-      return res.status(500).json({ message: "Error saving Teacher info" });
+      return res.status(500).json({ message: "Error saving Instructor info" });
 
-    return res.status(200).json({ message: "Teacher registered " });
+    return res.status(200).json({ message: "Instructor registered " });
   }),
   put: TryCatch(async (req, res) => {
     const data = req.body;
     const id = req.params.id;
-    const result = await UpdateOne(Teacher, id, data);
+    const result = await UpdateOne(Instructor, id, data);
 
-    if (!result)
-      return res.status(500).json({ message: "Error updating Teacher info" });
+    if (!result.acknowledged)
+      return res
+        .status(500)
+        .json({ message: "Error updating Instructor info" });
     return res.status(200).json({ message: "Successfully updated" });
   }),
   remove: TryCatch(async (req, res) => {
     const id = req.params.id;
 
-    const result = await DeleteOne(Teacher, id);
+    const result = await DeleteOne(Instructor, id);
     if (!result)
-      return res.status(500).json({ message: "Error in deleting teacher." });
+      return res.status(500).json({ message: "Error in deleting Instructor." });
 
-    return res.status(200).json({ message: "Teacher removed successfully" });
+    return res.status(200).json({ message: "Instructor removed successfully" });
   }),
   get: TryCatch(async (req, res) => {
     const filter = req.query;
     const id = req.params.id;
     let result = mongoose.isValidObjectId(id)
-      ? await FindOne(Teacher, id)
-      : await FindAll(Teacher, filter);
+      ? await FindOne(Instructor, id)
+      : await FindAll(Instructor, filter);
 
-    if (!result) res.status(500).json({ message: "Teacher info not found" });
+    if (!result) res.status(500).json({ message: "Instructor info not found" });
     return res.status(200).json(result);
   }),
 
@@ -91,10 +92,10 @@ module.exports = {
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({ message: "Invalid object Id." });
-    let teacher = await FindOne(Teacher, id);
+    let Instructor = await FindOne(Instructor, id);
 
-    if (!teacher)
-      return res.status(404).json({ message: "Teacher info not found." });
+    if (!Instructor)
+      return res.status(404).json({ message: "Instructor info not found." });
 
     upload.single("image")(req, res, async (err) => {
       if (err) {
@@ -107,7 +108,7 @@ module.exports = {
       const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
 
       imagePath = path.join(basePath, fileName);
-      const prevImagePath = `${dir}/public/uploads/${teacher.image.filename}`;
+      const prevImagePath = `${dir}/public/uploads/${Instructor.image.filename}`;
       fs.access(prevImagePath, fs.F_OK, (err) => {
         if (err) {
           console.error(err);
@@ -128,7 +129,7 @@ module.exports = {
           path: imagePath,
         },
       };
-      const result = UpdateOne(Teacher, id, image);
+      const result = UpdateOne(Instructor, id, image);
       if (!result) return res.status(500).json({ message: "Upload failed" });
 
       return res.status(200).json({ message: "Upload successfully" });

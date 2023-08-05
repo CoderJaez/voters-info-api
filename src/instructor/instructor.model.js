@@ -14,7 +14,7 @@ const instructorSchema = mongoose.Schema(
     middlename: {
       type: String,
     },
-    contactNo: {
+    contact_no: {
       type: String,
       required: [true, "The {PATH} is required"],
       minLength: [11, "Invalid contact number"],
@@ -49,7 +49,16 @@ const instructorSchema = mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    role: {
+      type: String,
+      required: [true, "The {role} is required"],
+      enum: {
+        values: ["admin", "instructor"],
+        message: "The {VALUe} is not supported",
+      },
+      default: "instructor",
     },
   },
   {

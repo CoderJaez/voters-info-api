@@ -7,7 +7,24 @@ const { PORT, API_URL } = process.env;
 
 const app = express();
 
-app.use(cors("*"));
+app.use(
+  cors({
+    origin: "*",
+    allowedHeaders: [
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Header",
+      "Access-Control-Expose-Headers",
+      "Content-Range",
+      "Content-Length",
+      "Connection",
+      "Content-Type",
+      "X-Content-Type-Options",
+      "Set-Cookies",
+      "*",
+    ],
+    exposedHeaders: "X-Total-Count",
+  }),
+);
 app.use(express.json());
 
 //Routers
