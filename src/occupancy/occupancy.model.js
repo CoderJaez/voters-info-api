@@ -26,15 +26,15 @@ const occupancySchema = mongoose.Schema(
         },
       ],
     },
-    teacher: {
+    instructor: {
       type: mongoose.Types.ObjectId,
-      ref: "Teacher",
+      ref: "Instructor",
       required: [true, "{PATH} is required"],
       validate: {
         validator: (value) => {
           return mongoose.isValidObjectId(value);
         },
-        message: () => "Teacher not found.",
+        message: () => "Instructor not found.",
       },
     },
     isVacant: {

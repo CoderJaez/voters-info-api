@@ -28,7 +28,8 @@ module.exports = {
         ? { roomNo: { $regex: req.query.roomNo, $options: "i" } }
         : {};
     let result;
-    if (mongoose.isValidObjectId(id)) result = await FindOne(Classroom, id);
+    if (mongoose.isValidObjectId(id))
+      result = await FindOne(Classroom, { _id: id });
     else result = await FindAll(Classroom, filter);
 
     if (!result)

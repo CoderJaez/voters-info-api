@@ -20,6 +20,7 @@ const FILE_TYPE_MAP = {
   "image/jpeg": "jpeg",
   "image/jpg": "jpg",
 };
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const isValid = FILE_TYPE_MAP[file.mimetype];
@@ -39,15 +40,10 @@ const upload = multer({ storage });
 module.exports = {
   post: TryCatch(async (req, res) => {
     const data = req.body;
-    data["password"] =
-      data.password !== undefined
-        ? await bycrypt.hashSync(data.password, saltRound)
-        : "";
     const result = await CreateOne(Instructor, data);
-    if (!result)
-      return res.status(500).json({ message: "Error saving Instructor info" });
 
-    return res.status(200).json({ message: "Instructor registered " });
+    if (!result) return res.status(500).json({ message: "Save failed" });
+    return res.status(200).json({ message: "New Instructor registered" });
   }),
   put: TryCatch(async (req, res) => {
     const data = req.body;
@@ -73,7 +69,7 @@ module.exports = {
     const filter = req.query;
     const id = req.params.id;
     let result = mongoose.isValidObjectId(id)
-      ? await FindOne(Instructor, id)
+      ? await FindOne(Instructor, { _id: id })
       : await FindAll(Instructor, filter);
 
     if (!result) res.status(500).json({ message: "Instructor info not found" });
@@ -92,7 +88,7 @@ module.exports = {
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({ message: "Invalid object Id." });
-    let Instructor = await FindOne(Instructor, id);
+    let Instructor = await FindOne(Instructor, { _id: id });
 
     if (!Instructor)
       return res.status(404).json({ message: "Instructor info not found." });

@@ -1,18 +1,22 @@
 const mongoose = require("mongoose");
 const { isExist, isValidEmail } = require("../utils/validator");
+const bcrypt = require("bcrypt");
 
 const instructorSchema = mongoose.Schema(
   {
     lastname: {
       type: String,
       required: [true, "The {PATH} is required"],
+      index: true,
     },
     firstname: {
       type: String,
       required: [true, "The {PATH} is requred"],
+      index: true,
     },
     middlename: {
       type: String,
+      default: "",
     },
     contact_no: {
       type: String,
@@ -66,11 +70,18 @@ const instructorSchema = mongoose.Schema(
   },
 );
 
-instructorSchema.virtual("fullname").get(function () {
-  return `${
-    this.lastname
-  }, ${this.firstname} ${this.middlename !== undefined ? this.middlename : null}`;
+instructorSchema.pre("save", async function (next) {
+  if (!this.isModified()) return next();
+
+  const hash = await bcrypt.hashSync(this.password, 12);
+
+  this.password = hash;
+  return next();
 });
+
+instructorSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password).catch((e) => false);
+};
 
 const Instructor = mongoose.model("Instructor", instructorSchema);
 
