@@ -5,6 +5,9 @@ const { signJWT, verifyJWT } = require("../utils/jwt.util");
 const SessionService = require("../session/session.service");
 
 module.exports = {
+  refresh: TryCatch(async (req, res) => {
+    const refreshToken = req.headers["x-refresh-token"];
+  }),
   login: TryCatch(async (req, res) => {
     const { email, password } = req.body;
     const user = await FindOne(Instructor, { email: email });
@@ -19,7 +22,7 @@ module.exports = {
       email: user.email,
       firstname: user.firstname,
       lastname: user.lastname,
-      image: user.image,
+      imagePath: user.image.path,
       role: user.role,
     };
     const session = await SessionService.CreateOne(user._id);
