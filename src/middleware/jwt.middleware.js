@@ -9,9 +9,9 @@ const authenticate = async (req, res, next) => {
     // const refresh_token = req.headers["x-refresh-token"];
     const { decoded, expired, valid } = await verifyJWT(token, "ACCESS_KEY");
     if (expired && !decoded)
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(403).json({ message: "Forbidden" });
   } catch (err) {
-    console.log("401 Unauthorized: ", err.message);
+    console.log("403 Forbidden: ", err.message);
   }
   return next();
 };
