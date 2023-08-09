@@ -36,6 +36,10 @@ const SessionService = {
   CreateOne: async (userId) => {
     return await DataAccess.CreateOne(Session, { user: userId });
   },
+
+  DeleteOne: async (sessionId) => {
+    return await DataAccess.DeleteOne(Session, sessionId);
+  },
 };
 
 module.exports = SessionService;

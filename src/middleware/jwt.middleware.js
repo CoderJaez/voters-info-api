@@ -6,19 +6,12 @@ const authenticate = async (req, res, next) => {
 
     // const token = authHeader && authHeader.split(" ")[1];
     const token = req.headers["x-access-token"];
-    const refresh_token = req.headers["x-refresh-token"];
-    const { decoded, expired } = await verifyJWT(token, "ACCESS_KEY");
-    console.log("Access token: ", decoded);
-    if (expired && refresh_token) {
-      const newAccessToken = await IssueNewAccessToken(refresh_token);
-      if (!newAccessToken)
-        return res.status(401).json({ message: "Unauthorized" });
-
-      res.setHeader("x-access-token", newAccessToken);
-      console.log("New access token: ", req.headers["x-access-token"]);
-    }
+    // const refresh_token = req.headers["x-refresh-token"];
+    const { decoded, expired, valid } = await verifyJWT(token, "ACCESS_KEY");
+    if (expired && !decoded)
+      return res.status(401).json({ message: "Unauthorized" });
   } catch (err) {
-    console.log("Unauthorized: ", err.message);
+    console.log("401 Unauthorized: ", err.message);
   }
   return next();
 };
