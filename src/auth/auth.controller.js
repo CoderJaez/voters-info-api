@@ -36,11 +36,12 @@ module.exports = {
       firstname: user.firstname,
       lastname: user.lastname,
       imagePath: user.image.path,
+      contact_no: user.contact_no,
       role: user.role,
     };
     const session = await CreateOne(user._id);
 
-    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "1m" });
+    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "15m" });
     const refresh_token = await signJWT(
       { ...data, sessionId: session._id },
       "REFRESH_KEY",
@@ -50,7 +51,8 @@ module.exports = {
     );
     return res.status(200).json({
       message: "Login successfull",
-      assess_token: acces_token,
+      data: data,
+      access_token: acces_token,
       refresh_token: refresh_token,
     });
   }),
