@@ -2,6 +2,7 @@ const Occupancy = require("./occupancy.model");
 const TryCatch = require("../utils/tryCatch");
 const DataAccess = require("../DataAccess");
 const OccupancyService = require("./occupancy.service");
+const { default: mongoose } = require("mongoose");
 module.exports = {
   get: TryCatch(async (req, res) => {
     const id = req.params.id;
@@ -11,15 +12,19 @@ module.exports = {
         ? { $gte: new Date(filter.date_from), $lte: new Date(filter.date_to) }
         : null;
     let match;
-    if (filter.name && filter.room && filterDate) {
+    if (id) {
       match = {
-        "teacher.name": { $regex: filter.name, $options: "i" },
+        instructor: new mongoose.Types.ObjectId(id),
+      };
+    } else if (filter.name && filter.room && filterDate) {
+      match = {
+        "instructor.name": { $regex: filter.name, $options: "i" },
         "classroom.roomNo": { $regex: filter.room, $options: "i" },
         createAt: filterDate,
       };
     } else {
       match = {
-        "teacher.name": {
+        "instructor.name": {
           $regex: filter.name ? filter.name : "",
           $options: "i",
         },
@@ -30,8 +35,8 @@ module.exports = {
       };
     }
 
-    const result = await OccupancyService.FindAll(Occupancy, {});
-
+    const result = await OccupancyService.FindAll(match);
+    // console.log("Result:", result);
     if (!result)
       return res.status(500).json({ message: "Something went wrong" });
 
@@ -40,6 +45,7 @@ module.exports = {
 
   post: TryCatch(async (req, res) => {
     const data = req.body;
+    console.log("Data:", data);
     const result = await OccupancyService.CreateOccupancy(data);
     if (!result)
       return res.status(500).json({ message: "Error saving occupancy" });

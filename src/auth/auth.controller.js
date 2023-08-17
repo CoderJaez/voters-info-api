@@ -32,6 +32,7 @@ module.exports = {
       return res.status(400).json({ message: "Invalid email/password." });
 
     const data = {
+      id: user._id,
       email: user.email,
       firstname: user.firstname,
       lastname: user.lastname,
@@ -39,19 +40,15 @@ module.exports = {
       contact_no: user.contact_no,
       role: user.role,
     };
-    const session = await CreateOne(user._id);
+    // const session = await CreateOne(user._id);
 
     const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "15m" });
-    const refresh_token = await signJWT(
-      { ...data, sessionId: session._id },
-      "REFRESH_KEY",
-      {
-        expiresIn: "31d",
-      },
-    );
+    const refresh_token = await signJWT({ ...data }, "REFRESH_KEY", {
+      expiresIn: "31d",
+    });
     return res.status(200).json({
       message: "Login successfull",
-      data: data,
+      user: data,
       access_token: acces_token,
       refresh_token: refresh_token,
     });

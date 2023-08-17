@@ -2,14 +2,17 @@ const Occupancy = require("./occupancy.model");
 const Classroom = require("../classrooom/classroom.model");
 const DataAccess = require("../DataAccess");
 const OccupancyService = {
-  FindAll: async (match) => {
+  FindOne: async (match) => {
     const result = await Occupancy.aggregate([
       {
+        $match: match,
+      },
+      {
         $lookup: {
-          from: "teachers",
-          localField: "teacher",
+          from: "instructors",
+          localField: "instructor",
           foreignField: "_id",
-          as: "teacher",
+          as: "instructor",
         },
       },
       {
@@ -21,22 +24,68 @@ const OccupancyService = {
         },
       },
       {
-        $unwind: "$teacher",
+        $unwind: "$instructor",
       },
       {
         $unwind: "$classroom",
       },
+
       {
         $project: {
           _id: 1,
-          teacher: {
-            $concat: ["$teacher.firstname", " ", "$teacher.lastname"],
+          instructor: {
+            $concat: ["$instructor.firstname", " ", "$instructor.lastname"],
           },
-          classroom: {
-            roomNo: "$classroom.roomNo",
-            occupied: "$classroom.isOccupied",
+          roomNo: "$classroom.roomNo",
+          isOccupied: "$clasroom.isOccupied",
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
+    return result;
+  },
+  FindAll: async (match) => {
+    const result = await Occupancy.aggregate([
+      {
+        $match: match,
+      },
+      {
+        $lookup: {
+          from: "instructors",
+          localField: "instructor",
+          foreignField: "_id",
+          as: "instructor",
+        },
+      },
+      {
+        $lookup: {
+          from: "classrooms",
+          localField: "classroom",
+          foreignField: "_id",
+          as: "classroom",
+        },
+      },
+      {
+        $unwind: "$instructor",
+      },
+      {
+        $unwind: "$classroom",
+      },
+
+      {
+        $project: {
+          _id: 1,
+          instructor: {
+            $concat: ["$instructor.firstname", " ", "$instructor.lastname"],
           },
-          isVacant: 1,
+          roomNo: "$classroom.roomNo",
+          isOccupied: "$classroom.isOccupied",
           createdAt: 1,
           updatedAt: 1,
         },

@@ -23,7 +23,7 @@ app.use(
       "Set-Cookies",
       "*",
     ],
-    exposedHeaders: ["X-Total-Count", "x-access-token"],
+    exposedHeaders: ["X-Total-Count", "x-access-token", "x-refresh-token"],
   }),
 );
 app.use(express.json());
