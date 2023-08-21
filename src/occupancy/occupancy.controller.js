@@ -45,7 +45,6 @@ module.exports = {
 
   post: TryCatch(async (req, res) => {
     const data = req.body;
-    console.log("Data:", data);
     const result = await OccupancyService.CreateOccupancy(data);
     if (!result)
       return res.status(500).json({ message: "Error saving occupancy" });

@@ -33,12 +33,13 @@ const classroomRouter = require("./classrooom/classroom.route");
 const instructorRouter = require("./instructor/instructor.route");
 const occupancyRouter = require("./occupancy/occupancy.route");
 const authRouter = require("./auth/auth.route");
-
+const meRouter = require("./auth/me/me.route");
 //Routes
 app.use(`${API_URL}classrooms`, authenticate, classroomRouter);
 app.use(`${API_URL}instructors`, authenticate, instructorRouter);
 app.use(`${API_URL}occupancies`, authenticate, occupancyRouter);
 app.use(`${API_URL}auth`, authRouter);
+app.use(`${API_URL}me`, authenticate, meRouter);
 
 app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 

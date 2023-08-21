@@ -11,7 +11,7 @@ const {
 module.exports = {
   refresh: TryCatch(async (req, res) => {
     const refreshToken = req.headers["x-refresh-token"];
-
+    console.log("Refresh token:", refreshToken);
     if (!refreshToken) return res.status(401).json({ message: "Unauthorized" });
 
     const newAccessToken = await IssueNewAccessToken(refreshToken);
@@ -34,15 +34,16 @@ module.exports = {
     const data = {
       id: user._id,
       email: user.email,
+      middlename: user.middlename,
       firstname: user.firstname,
       lastname: user.lastname,
-      imagePath: user.image.path,
+      image_path: user.image.path,
       contact_no: user.contact_no,
       role: user.role,
     };
     // const session = await CreateOne(user._id);
 
-    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "15m" });
+    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "30s" });
     const refresh_token = await signJWT({ ...data }, "REFRESH_KEY", {
       expiresIn: "31d",
     });

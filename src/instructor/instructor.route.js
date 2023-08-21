@@ -4,7 +4,6 @@ const {
   post,
   put,
   changePassword,
-  uploadImage,
   remove,
 } = require("./instructor.controller");
 const router = Router();
@@ -13,7 +12,6 @@ router
   .get("/", get)
   .get("/:id", get)
   .post("/", post)
-  .post("/upload-image/:id", uploadImage)
   .put("/:id", put)
   .put("/change-password/:id", changePassword)
   .delete("/:id", remove);
