@@ -4,6 +4,7 @@ const TryCatch = require("../../utils/tryCatch");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const dir = require("../../constants");
+const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("fs");
 const FILE_TYPE_MAP = {
@@ -38,10 +39,22 @@ module.exports = {
     }
     return res.status(200).json({ message: "Successfully update user info" });
   }),
+  ChangePassword: TryCatch(async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    const hashPassword = await bcrypt.hashSync(data.password, 12);
+    const result = await DataAccess.UpdateOne(Instructor, id, {
+      password: hashPassword,
+    });
+    if (!result)
+      return res.status(500).json({ message: "Error updating password" });
+
+    return res.status(200).json({ message: "Succesfully update password" });
+  }),
   uploadImage: TryCatch(async (req, res) => {
     const id = req.params.id;
     const file = req.file;
-    // if (!file) return res.status(400).send("No image in the request");
+    if (!file) return res.status(400).send("No image in the request");
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({ message: "Invalid object Id." });
