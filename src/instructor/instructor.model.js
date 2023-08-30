@@ -83,6 +83,10 @@ instructorSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password).catch((e) => false);
 };
 
+instructorSchema.methods.fullname = function () {
+  return `${this.firstname} ${this.middlename} ${this.lastname}`;
+};
+
 const Instructor = mongoose.model("Instructor", instructorSchema);
 
 module.exports = Instructor;

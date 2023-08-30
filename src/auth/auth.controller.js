@@ -1,12 +1,20 @@
 const Instructor = require("../instructor/instructor.model");
-const { FindOne } = require("../DataAccess");
+const { FindOne, UpdateOne } = require("../DataAccess");
 const TryCatch = require("../utils/tryCatch");
 const { signJWT, verifyJWT } = require("../utils/jwt.util");
+const sendMail = require("../utils/mail");
+const bcrypt = require("bcrypt");
 const {
   IssueNewAccessToken,
   CreateOne,
   DeleteOne,
 } = require("../session/session.service");
+
+function generateRandom6DigitPin() {
+  const min = 100000; // Minimum 6-digit number
+  const max = 999999; // Maximum 6-digit number
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 module.exports = {
   refresh: TryCatch(async (req, res) => {
@@ -43,7 +51,7 @@ module.exports = {
     };
     // const session = await CreateOne(user._id);
 
-    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "30s" });
+    const acces_token = await signJWT(data, "ACCESS_KEY", { expiresIn: "15m" });
     const refresh_token = await signJWT({ ...data }, "REFRESH_KEY", {
       expiresIn: "31d",
     });
@@ -63,5 +71,41 @@ module.exports = {
       return res.status(500).json({ message: "Error removing session" });
 
     return res.status(202).json({ message: "Successfully logout" });
+  }),
+  ResetPassword: TryCatch(async (req, res) => {
+    const { email, password } = req.body;
+    console.log(req.body);
+    const hashPassword = await bcrypt.hashSync(password, 12);
+    const result = await Instructor.updateOne(
+      { email },
+      { password: hashPassword },
+    );
+    if (!result)
+      return res.status(500).json({ message: "Error resetting password" });
+
+    return res
+      .status(200)
+      .json({ message: "Successfully resetting password." });
+  }),
+  ForgotPassword: TryCatch(async (req, res) => {
+    const data = req.body;
+
+    const result = await FindOne(Instructor, data);
+    if (!result) return res.status(400).json({ message: "Email not found" });
+    const userName = result.fullname();
+    const randomPin = generateRandom6DigitPin();
+
+    const subject = "QRClassTrack App Password Reset";
+    const content = `
+    Dear ${userName}, \n
+    We recently received a request to reset the password for your QRClassTrack app account. 
+    If you didn't initiate this request, please disregard this message.\n
+    If you did request a password reset, please use the following temporary verification code to reset your password:
+    Temporary Verification Code: ${randomPin}`;
+    sendMail(data.email, subject, content);
+    return res.status(200).json({
+      message: "Sending Email",
+      pin: randomPin,
+    });
   }),
 };
