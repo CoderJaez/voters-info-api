@@ -34,6 +34,7 @@ const instructorRouter = require("./instructor/instructor.route");
 const occupancyRouter = require("./occupancy/occupancy.route");
 const authRouter = require("./auth/auth.route");
 const meRouter = require("./auth/me/me.route");
+
 //Routes
 app.use(`${API_URL}classrooms`, authenticate, classroomRouter);
 app.use(`${API_URL}instructors`, authenticate, instructorRouter);
