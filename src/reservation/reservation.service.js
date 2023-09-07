@@ -2,11 +2,8 @@ const mongoose = require("mongoose");
 const Reservation = require("./reservation.model");
 
 module.exports = {
-  FindAll: async (match) => {
+  FindAll: async (match, skip = 0, limit = 10) => {
     const result = await Reservation.aggregate([
-      {
-        $match: match,
-      },
       {
         $lookup: {
           from: "classrooms",
@@ -30,6 +27,9 @@ module.exports = {
         $unwind: "$classroom",
       },
       {
+        $match: match,
+      },
+      {
         $project: {
           _id: 1,
           event: 1,
@@ -51,6 +51,15 @@ module.exports = {
           updatedAt: 1,
         },
       },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
     ]);
+
+    return result;
   },
 };

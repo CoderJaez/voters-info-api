@@ -40,7 +40,7 @@ const meRouter = require("./auth/me/me.route");
 app.use(`${API_URL}classrooms`, authenticate, classroomRouter);
 app.use(`${API_URL}instructors`, authenticate, instructorRouter);
 app.use(`${API_URL}occupancies`, authenticate, occupancyRouter);
-app.use(`${API_URL}reservations`, authenticate, reservationRouter);
+app.use(`${API_URL}reservations`, reservationRouter);
 app.use(`${API_URL}auth`, authRouter);
 app.use(`${API_URL}me`, authenticate, meRouter);
 
