@@ -32,7 +32,11 @@ module.exports = {
 
     if (filter.search !== undefined && filterDate) {
       match = {
-        "instructor.lastname": { $regex: filter.search, $options: "i" },
+        $or: [
+          { "instructor.lastname": { $regex: filter.search, $options: "i" } },
+          { "instructor.fistname": { $regex: filter.search, $options: "i" } },
+          { "instructor._id": new mongoose.Types.ObjectId(filter.search) },
+        ],
         dateFrom: filterDate,
       };
     } else if (filterDate) {
@@ -41,10 +45,11 @@ module.exports = {
       };
     } else {
       match = {
-        "instructor.lastname": {
-          $regex: filter.search ? filter.search : "",
-          $options: "i",
-        },
+        $or: [
+          { "instructor.lastname": { $regex: filter.search, $options: "i" } },
+          { "instructor.fistname": { $regex: filter.search, $options: "i" } },
+          { "instructor._id": new mongoose.Types.ObjectId(filter.search) },
+        ],
       };
     }
     const result = await service.FindAll(match);

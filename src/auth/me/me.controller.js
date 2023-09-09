@@ -5,8 +5,9 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const dir = require("../../constants");
 const bcrypt = require("bcrypt");
-const path = require("path");
-const fs = require("fs");
+const path = require("path")//;
+const fs = require("fs");//
+
 const FILE_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpeg",

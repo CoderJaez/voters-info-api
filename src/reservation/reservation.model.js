@@ -21,9 +21,9 @@ const reservationSchema = mongoose.Schema(
       type: Date,
       required: [true, "Please select a date"],
     },
-    approve: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      default: "pending",
     },
     event: {
       type: String,
