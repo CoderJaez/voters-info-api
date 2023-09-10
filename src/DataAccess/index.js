@@ -7,7 +7,7 @@ const DataAccess = {
 
     return result;
   },
-  UpdateOne: async (Model, condition, data) => {
+  UpdateOne: async (Model, id, data) => {
     if (!mongoose.isValidObjectId(id)) return null;
 
     const result = await Model.updateOne({ _id: id }, data);
