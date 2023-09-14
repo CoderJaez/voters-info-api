@@ -56,7 +56,8 @@ reservationSchema.pre("validate", async function (next) {
     ],
   });
   if (!result) return next();
-  this.invalidate("reservation", "The reservation is not available");
+  this.invalidate("dateFrom", "The date is not available");
+  this.invalidate("dateTo", "The time is not available");
 });
 
 const Reservation = mongoose.model("Reservation", reservationSchema);

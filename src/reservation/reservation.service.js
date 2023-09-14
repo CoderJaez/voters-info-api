@@ -63,4 +63,8 @@ module.exports = {
 
     return result;
   },
+  FindOne: async (condition) => {
+    const result = await Reservation.findOne(condition).populate("classroom");
+    return result;
+  },
 };

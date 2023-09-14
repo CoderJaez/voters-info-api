@@ -11,12 +11,24 @@ module.exports = {
     let newResevation = new Reservation(data);
 
     newResevation = await newResevation.save();
+
+    let newData = await service.FindOne({ _id: newResevation._id });
+    newData = {
+      _id: newData._id,
+      event: newData.event,
+      dateFrom: newData.dateFrom,
+      date_to: newData.dateTo,
+      instructor: newData.instructor.fullname,
+      classroom: newData.classroom.roomNo,
+      status: newData.status,
+    };
     if (!newResevation)
       return res.status(500).json({ message: "Error saving reservation" });
 
-    return res
-      .status(200)
-      .json({ message: "Successfully registered a reservation" });
+    return res.status(200).json({
+      message: "Successfully registered a reservation",
+      newReservation: newData,
+    });
   }),
 
   get: TryCatch(async (req, res) => {
