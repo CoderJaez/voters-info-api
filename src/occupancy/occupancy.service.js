@@ -86,6 +86,7 @@ const OccupancyService = {
           },
           roomNo: "$classroom.roomNo",
           isOccupied: "$classroom.isOccupied",
+          isVacant: 1,
           createdAt: 1,
           updatedAt: 1,
         },

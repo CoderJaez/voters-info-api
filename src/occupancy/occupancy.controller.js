@@ -3,6 +3,7 @@ const TryCatch = require("../utils/tryCatch");
 const DataAccess = require("../DataAccess");
 const OccupancyService = require("./occupancy.service");
 const { default: mongoose } = require("mongoose");
+const Classroom = require("../classrooom/classroom.model");
 module.exports = {
   get: TryCatch(async (req, res) => {
     const id = req.params.id;
@@ -15,6 +16,7 @@ module.exports = {
     if (id) {
       match = {
         instructor: new mongoose.Types.ObjectId(id),
+        isVacant: JSON.parse(filter.isVacant),
       };
     } else if (filter.name && filter.room && filterDate) {
       match = {
@@ -49,5 +51,21 @@ module.exports = {
     if (!result)
       return res.status(500).json({ message: "Error saving occupancy" });
     return res.status(200).json({ message: "Successfully occupied classroom" });
+  }),
+  put: TryCatch(async (req, res) => {
+    const id = req.params.id;
+    if (!mongoose.isValidObjectId(id))
+      return res.status(500).json({ message: "Invalid object Id." });
+    const occupancy = await Occupancy.findOne({ _id: id });
+    const result = await Occupancy.updateOne({ _id: id }, { isVacant: true });
+    const classroomResult = await Classroom.updateOne(
+      { _id: occupancy.classroom },
+      { isOccupied: false },
+    );
+    console.log(result, classroomResult);
+    if (!result || !classroomResult)
+      return res.status(500).json({ message: "Error in vacating room " });
+
+    return res.status(200).json({ message: "The room is now available." });
   }),
 };

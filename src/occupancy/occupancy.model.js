@@ -45,5 +45,19 @@ const occupancySchema = mongoose.Schema(
   { timestamps: true },
 );
 
+occupancySchema.pre("validate", async function (next) {
+  const instructor = this.instructor;
+
+  const result = await this.constructor.findOne({
+    instructor: instructor,
+    isVacant: false,
+  });
+  if (!result) return next();
+  this.invalidate(
+    "classroom",
+    "You still occupied from the other room. Please check. ",
+  );
+});
+
 const Occupancy = mongoose.model("Occupancy", occupancySchema);
 module.exports = Occupancy;

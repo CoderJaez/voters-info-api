@@ -79,6 +79,7 @@ instructorSchema.pre("save", async function (next) {
   return next();
 });
 
+instructorSchema.index({ lastname: 1, firstname: 1, email: 1 });
 instructorSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password).catch((e) => false);
 };
