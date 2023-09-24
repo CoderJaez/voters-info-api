@@ -42,7 +42,7 @@ module.exports = {
     const data = req.body;
     const result = await UpdateOne(Classroom, id, data);
 
-    if (!result.acknowledge)
+    if (!result && result.modifiedCount <= 0)
       return res.status(500).json({ message: "Error update classroom" });
 
     return res.status(200).json({ message: "Succesfully updated classroom" });

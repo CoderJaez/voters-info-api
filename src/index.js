@@ -11,6 +11,7 @@ const app = express();
 app.use(
   cors({
     origin: "*",
+    supports_credentials: true,
     allowedHeaders: [
       "Access-Control-Allow-Origin",
       "Access-Control-Allow-Header",
@@ -38,7 +39,7 @@ const meRouter = require("./auth/me/me.route");
 
 //Routes
 app.use(`${API_URL}classrooms`, authenticate, classroomRouter);
-app.use(`${API_URL}instructors`, authenticate, instructorRouter);
+app.use(`${API_URL}users`, authenticate, instructorRouter);
 app.use(`${API_URL}occupancies`, authenticate, occupancyRouter);
 app.use(`${API_URL}reservations`, reservationRouter);
 app.use(`${API_URL}auth`, authRouter);
