@@ -15,30 +15,46 @@ module.exports = {
     let match;
     if (id) {
       match = {
-        instructor: new mongoose.Types.ObjectId(id),
+        "instructor._id": new mongoose.Types.ObjectId(id),
         isVacant: JSON.parse(filter.isVacant),
       };
-    } else if (filter.name && filter.room && filterDate) {
+    } else if (filter.search && filterDate) {
       match = {
-        "instructor.name": { $regex: filter.name, $options: "i" },
-        "classroom.roomNo": { $regex: filter.room, $options: "i" },
-        createAt: filterDate,
+        $or: [
+          {
+            "instructor.lastname": {
+              $regex: filter.search ? filter.search : "",
+              $options: "i",
+            },
+          },
+          {
+            "classroom.roomNo": {
+              $regex: filter.search ? filter.search : "",
+              $options: "i",
+            },
+          },
+        ],
+        createdAt: filterDate,
       };
     } else {
       match = {
-        "instructor.name": {
-          $regex: filter.name ? filter.name : "",
-          $options: "i",
-        },
-        "classroom.roomNo": {
-          $regex: filter.room ? filter.room : "",
-          $options: "i",
-        },
+        $or: [
+          {
+            "instructor.lastname": {
+              $regex: filter.search ? filter.search : "",
+              $options: "i",
+            },
+          },
+          {
+            "classroom.roomNo": {
+              $regex: filter.search ? filter.search : "",
+              $options: "i",
+            },
+          },
+        ],
       };
     }
-
     const result = await OccupancyService.FindAll(match);
-    // console.log("Result:", result);
     if (!result)
       return res.status(500).json({ message: "Something went wrong" });
 

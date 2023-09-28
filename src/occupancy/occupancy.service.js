@@ -53,9 +53,6 @@ const OccupancyService = {
   FindAll: async (match) => {
     const result = await Occupancy.aggregate([
       {
-        $match: match,
-      },
-      {
         $lookup: {
           from: "instructors",
           localField: "instructor",
@@ -77,13 +74,22 @@ const OccupancyService = {
       {
         $unwind: "$classroom",
       },
-
+      {
+        $match: match,
+      },
       {
         $project: {
           _id: 1,
           instructor: {
-            $concat: ["$instructor.firstname", " ", "$instructor.lastname"],
+            $concat: [
+              "$instructor.firstname",
+              " ",
+              "$instructor.middlename",
+              " ",
+              "$instructor.lastname",
+            ],
           },
+          image_path: "$instructor.image.path",
           roomNo: "$classroom.roomNo",
           isOccupied: "$classroom.isOccupied",
           isVacant: 1,
