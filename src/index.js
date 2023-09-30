@@ -30,18 +30,11 @@ app.use(
 app.use(express.json());
 
 //Routers
-const classroomRouter = require("./classrooom/classroom.route");
-const instructorRouter = require("./instructor/instructor.route");
-const occupancyRouter = require("./occupancy/occupancy.route");
-const reservationRouter = require("./reservation/reservation.route");
-const authRouter = require("./auth/auth.route");
-const meRouter = require("./auth/me/me.route");
+const authRouter = require("./modules/auth/auth.route");
+const meRouter = require("./modules/auth/me/me.route");
+const voterRouter = require("./modules/voter/voter.route")
 
 //Routes
-app.use(`${API_URL}classrooms`, authenticate, classroomRouter);
-app.use(`${API_URL}users`, authenticate, instructorRouter);
-app.use(`${API_URL}occupancies`, authenticate, occupancyRouter);
-app.use(`${API_URL}reservations`, reservationRouter);
 app.use(`${API_URL}auth`, authRouter);
 app.use(`${API_URL}me`, authenticate, meRouter);
 

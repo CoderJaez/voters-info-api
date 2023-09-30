@@ -1,12 +1,12 @@
 const { Router } = require("express");
-const { get, post, put, deleteOne } = require("./classroom.controller");
+const { get, post, put, remove } = require("./voter.controller");
 const router = Router();
 
 router
   .get("/", get)
-  .get("/:id", get)
   .post("/", post)
+  .get("/:id", get)
   .put("/:id", put)
-  .delete("/:id", deleteOne);
+  .delete("/:id", remove);
 
 module.exports = router;

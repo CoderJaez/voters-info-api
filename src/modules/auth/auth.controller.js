@@ -1,14 +1,9 @@
-const Instructor = require("../instructor/instructor.model");
-const { FindOne, UpdateOne } = require("../DataAccess");
-const TryCatch = require("../utils/tryCatch");
-const { signJWT, verifyJWT } = require("../utils/jwt.util");
-const sendMail = require("../utils/mail");
+const User = require("../user/user.model");
+const { FindOne, UpdateOne } = require("../../DataAccess");
+const TryCatch = require("../../utils/tryCatch");
+const { signJWT, verifyJWT } = require("../../utils/jwt.util");
+const sendMail = require("../../utils/mail");
 const bcrypt = require("bcrypt");
-const {
-  IssueNewAccessToken,
-  CreateOne,
-  DeleteOne,
-} = require("../session/session.service");
 
 function generateRandom6DigitPin() {
   const min = 100000; // Minimum 6-digit number
@@ -31,7 +26,7 @@ module.exports = {
   }),
   login: TryCatch(async (req, res) => {
     const { email, password } = req.body;
-    const user = await FindOne(Instructor, { email: email });
+    const user = await FindOne(User, { email: email });
     if (!user)
       return res.status(400).json({ message: "Invalid email/password." });
 
@@ -76,10 +71,7 @@ module.exports = {
     const { email, password } = req.body;
     console.log(req.body);
     const hashPassword = await bcrypt.hashSync(password, 12);
-    const result = await Instructor.updateOne(
-      { email },
-      { password: hashPassword },
-    );
+    const result = await User.updateOne({ email }, { password: hashPassword });
     if (!result)
       return res.status(500).json({ message: "Error resetting password" });
 
@@ -90,8 +82,8 @@ module.exports = {
   ForgotPassword: TryCatch(async (req, res) => {
     const data = req.body;
 
-    const result = await FindOne(Instructor, data);
-    if (!result) return res.status(400).json({ message: "Email not found" });
+    const result = await FindOne(User, data);
+    if (!result) return res.status(400).json({ message: "Username not found" });
     const userName = result.fullname();
     const randomPin = generateRandom6DigitPin();
 

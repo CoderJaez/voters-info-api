@@ -1,12 +1,12 @@
-const Instructor = require("../../instructor/instructor.model");
-const DataAccess = require("../../DataAccess");
-const TryCatch = require("../../utils/tryCatch");
+const User = require("../../user/user.model");
+const DataAccess = require("../../../DataAccess");
+const TryCatch = require("../../../utils/tryCatch");
 const mongoose = require("mongoose");
 const multer = require("multer");
-const dir = require("../../constants");
+const dir = require("../../../constants");
 const bcrypt = require("bcrypt");
-const path = require("path")//;
-const fs = require("fs");//
+const path = require("path"); //;
+const fs = require("fs"); //
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
@@ -34,7 +34,7 @@ module.exports = {
   UpdateUser: TryCatch(async (req, res) => {
     const id = req.params.id;
     const data = req.body;
-    const result = await DataAccess.UpdateOne(Instructor, id, data);
+    const result = await DataAccess.UpdateOne(User, id, data);
     if (!result) {
       return res.status(500).json({ message: "Error updating User Info" });
     }
@@ -44,7 +44,7 @@ module.exports = {
     const id = req.params.id;
     const data = req.body;
     const hashPassword = await bcrypt.hashSync(data.password, 12);
-    const result = await DataAccess.UpdateOne(Instructor, id, {
+    const result = await DataAccess.UpdateOne(User, id, {
       password: hashPassword,
     });
     if (!result)
@@ -61,10 +61,10 @@ module.exports = {
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({ message: "Invalid object Id." });
-    let user = await DataAccess.FindOne(Instructor, { _id: id });
+    let user = await DataAccess.FindOne(User, { _id: id });
 
     if (!user)
-      return res.status(404).json({ message: "Instructor info not found." });
+      return res.status(404).json({ message: "User info not found." });
 
     upload.single("image")(req, res, async (err) => {
       if (err) {
@@ -98,7 +98,7 @@ module.exports = {
           path: imagePath,
         },
       };
-      const result = DataAccess.UpdateOne(Instructor, id, image);
+      const result = DataAccess.UpdateOne(User, id, image);
       if (!result) return res.status(500).json({ message: "Upload failed" });
 
       return res
