@@ -28,21 +28,15 @@ module.exports = {
     const { email, password } = req.body;
     const user = await FindOne(User, { email: email });
     if (!user)
-      return res.status(400).json({ message: "Invalid email/password." });
+      return res.status(400).json({ message: "Invalid username/password." });
 
     const isPasswordMatch = await user.comparePassword(password);
     if (!isPasswordMatch)
-      return res.status(400).json({ message: "Invalid email/password." });
+      return res.status(400).json({ message: "Invalid username/password." });
 
     const data = {
       id: user._id,
-      email: user.email,
-      middlename: user.middlename,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      image_path: user.image.path,
-      contact_no: user.contact_no,
-      role: user.role,
+      username: user.username,
     };
     // const session = await CreateOne(user._id);
 

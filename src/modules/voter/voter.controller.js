@@ -31,10 +31,9 @@ module.exports = {
           }
         : {};
 
-    const result =
-      id && mongoose.isValidObjectId(id)
-        ? Voter.findOne({ _id: id })
-        : User.find(match).sort({ lastname: -1 });
+    const result = mongoose.isValidObjectId(id)
+      ? await DataAccess.FindOne(Voter, { _id: id })
+      : await DataAccess.FindAll(Voter, match);
 
     if (!result)
       return res.status(500).json({ mesage: "Something went wrong" });
@@ -58,7 +57,7 @@ module.exports = {
     if (!mongoose.isValidObjectId(id))
       return res.status(500).json({ message: "Invalid object Id" });
 
-    const result = await DataAccess.DeleteOne(User, id);
+    const result = await DataAccess.DeleteOne(Voter, id);
     if (!result)
       return res.status(500).json({ message: "Failed to remove voter" });
     return res

@@ -32,11 +32,20 @@ app.use(express.json());
 //Routers
 const authRouter = require("./modules/auth/auth.route");
 const meRouter = require("./modules/auth/me/me.route");
-const voterRouter = require("./modules/voter/voter.route")
+const voterRouter = require("./modules/voter/voter.route");
 
 //Routes
 app.use(`${API_URL}auth`, authRouter);
 app.use(`${API_URL}me`, authenticate, meRouter);
+app.use(`${API_URL}voters`, voterRouter);
+// app.use("*", (err, req, res, next) => {
+//   err.status = err.status || "error";
+//   err.statusCode = err.statusCode || 500;
+//   res.status(err.statusCode).json({
+//     status: err.status,
+//     message: err.message,
+//   });
+// });
 
 app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 

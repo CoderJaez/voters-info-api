@@ -29,7 +29,6 @@ const DataAccess = {
   },
   FindOne: async (Model, condition) => {
     const result = await Model.findOne(condition);
-
     if (!result) return null;
     return result;
   },
