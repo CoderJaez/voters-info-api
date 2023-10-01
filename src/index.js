@@ -3,8 +3,9 @@ const cors = require("cors");
 const connection = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
 const authenticate = require("./middleware/jwt.middleware");
+
 require("dotenv/config");
-const { PORT, API_URL } = process.env;
+const { PORT, API_URL } = require("./constants");
 
 const app = express();
 

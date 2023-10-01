@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv/config");
-const { UNAME, PASS, DB_NAME, ENV } = process.env;
+const { UNAME, PASS, DB_NAME, ENV } = require("../constants");
 
 const DEV_MONGO_URI = `mongodb://127.0.0.1/${DB_NAME}`;
 const PROD_MONGO_URI = `mongodb+srv://${UNAME}:${PASS}@cluster0.sh1oc.mongodb.net/${DB_NAME}`;
