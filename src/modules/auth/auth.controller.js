@@ -25,8 +25,8 @@ module.exports = {
     return res.status(200).json({ accessToken: newAccessToken });
   }),
   login: TryCatch(async (req, res) => {
-    const { email, password } = req.body;
-    const user = await FindOne(User, { email: email });
+    const { username, password } = req.body;
+    const user = await FindOne(User, { username: username });
     if (!user)
       return res.status(400).json({ message: "Invalid username/password." });
 

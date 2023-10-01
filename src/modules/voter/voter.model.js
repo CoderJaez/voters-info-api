@@ -19,20 +19,11 @@ const voterSchema = mongoose.Schema({
     type: String,
     default: "",
   },
-  votersId: {
+  gender: {
     type: String,
-    required: [true, "The {PATH} is required"],
-    index: true,
+    required: [true, "The {PATH} is requried"],
   },
   address: {
-    type: String,
-    required: [true, "The {PATH} is required"],
-  },
-  city: {
-    type: String,
-    required: [true, "The {PATH} is required"],
-  },
-  province: {
     type: String,
     required: [true, "The {PATH} is required"],
   },
