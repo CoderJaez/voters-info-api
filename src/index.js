@@ -34,11 +34,12 @@ app.use(express.json());
 const authRouter = require("./modules/auth/auth.route");
 const meRouter = require("./modules/auth/me/me.route");
 const voterRouter = require("./modules/voter/voter.route");
-
+const datastreamRouter = require("./modules/datastream/datastream.route");
 //Routes
 app.use(`${API_URL}auth`, authRouter);
 app.use(`${API_URL}me`, authenticate, meRouter);
 app.use(`${API_URL}voters`, voterRouter);
+app.use(`${API_URL}datastreams`, datastreamRouter);
 // app.use("*", (err, req, res, next) => {
 //   err.status = err.status || "error";
 //   err.statusCode = err.statusCode || 500;
