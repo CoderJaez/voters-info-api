@@ -20,23 +20,21 @@ module.exports = {
   get: TryCatch(async (req, res) => {
     const id = req.params.id;
     const filter = req.query;
-    let match =
+    const match =
       filter.search !== undefined
         ? {
             $or: [
-              { firstname: { $regex: filter.search, options: "$i" } },
-              { lastname: { $regex: filter.search, options: "$i" } },
-              { voterId: { $regex: filter.search, options: "$i" } },
+              { firstname: { $regex: filter.search, $options: "i" } },
+              { lastname: { $regex: filter.search, $options: "i" } },
             ],
           }
         : {};
 
     const result = mongoose.isValidObjectId(id)
       ? await DataAccess.FindOne(Voter, { _id: id })
-      : await DataAccess.FindAll(Voter, match);
-
+      : await Voter.find(match).sort({ createdAt: -1 });
     if (!result)
-      return res.status(500).json({ mesage: "Something went wrong" });
+      return res.status(500).json({ mesage: "Something wentx wrong" });
     return res.status(200).json(result);
   }),
   put: TryCatch(async (req, res) => {
